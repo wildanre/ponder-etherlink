@@ -15,8 +15,7 @@ export default createConfig({
     etherlink: {
       id: 128123,
       rpc:
-        process.env.ETHERLINK_TESTNET_RPC_URL ||
-        "https://node.ghostnet.etherlink.com",
+        process.env.ETHERLINK_TESTNET_RPC_URL
     },
   },
   contracts: {
