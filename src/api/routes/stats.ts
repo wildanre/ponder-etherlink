@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import { db } from "../../db";
-import { lendingPool, position as positionTable, liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt } from "../../../ponder.schema";
+import { client, lendingPool, position as positionTable, liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt } from "../../db";
 import { serializeBigInt } from '../index';
 
 export const statsRoutes = new Hono();
@@ -9,12 +8,12 @@ export const statsRoutes = new Hono();
 statsRoutes.get("/stats/overview", async (c) => {
   try {
     // Get all data
-    const pools = await db.select().from(lendingPool);
-    const positions = await db.select().from(positionTable);
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
+    const pools = await client!`SELECT * FROM "lendingPool"`;
+    const positions = await client!`SELECT * FROM "position"`;
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
 
     // Calculate metrics
     const totalLiquiditySupplied = supplies.reduce((sum: number, item: any) => sum + Number(item.amount), 0);
@@ -77,11 +76,11 @@ statsRoutes.get("/stats/overview", async (c) => {
 // GET /stats/pools - Get pool statistics
 statsRoutes.get("/stats/pools", async (c) => {
   try {
-    const pools = await db.select().from(lendingPool);
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
+    const pools = await client!`SELECT * FROM "lendingPool"`;
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
 
     const poolStats = pools.map((pool: any) => {
       // Filter activities by pool
@@ -162,10 +161,10 @@ statsRoutes.post("/stats/historical", async (c) => {
     const startTime = now - timeframeSeconds;
 
     // Get all activities within timeframe
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
 
     const allActivities = [
       ...supplies.map((item: any) => ({ ...item, type: 'supply' })),
@@ -217,10 +216,10 @@ statsRoutes.post("/stats/historical", async (c) => {
 // GET /stats/tokens - Get token usage statistics
 statsRoutes.get("/stats/tokens", async (c) => {
   try {
-    const pools = await db.select().from(lendingPool);
-    const supplies = await db.select().from(liquiditySupply);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
+    const pools = await client!`SELECT * FROM "lendingPool"`;
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
 
     // Count token usage
     const tokenStats: { [key: string]: any } = {};

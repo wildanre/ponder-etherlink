@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import { db } from "../../db";
-import { liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt, borrowDebtCrosschain, repayWithCollateral } from "../../../ponder.schema";
+import { client, liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt, borrowDebtCrosschain, repayWithCollateral } from "../../db";
 import { serializeBigInt } from '../index';
 
 export const activityRoutes = new Hono();
@@ -13,12 +12,12 @@ activityRoutes.get("/activities", async (c) => {
     const type = c.req.query("type"); // Filter by activity type
 
     // Get all activities
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
+    const supplies = await client!`SELECT * FROM liquiditySupply`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
 
     // Combine all activities with type labels
     let allActivities = [
@@ -69,21 +68,22 @@ activityRoutes.get("/activities/user/:userAddress", async (c) => {
     const offset = parseInt(c.req.query("offset") || "0");
 
     // Get all activities for user
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
+    if (!client) throw new Error("Database client not initialized");
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
 
     // Filter by user address and combine
     const userActivities = [
-      ...supplies.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_supply', category: 'lending' })),
-      ...withdrawals.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_withdraw', category: 'lending' })),
-      ...collaterals.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'collateral_supply', category: 'lending' })),
-      ...borrows.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow', category: 'lending' })),
-      ...crosschainBorrows.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow_crosschain', category: 'lending' })),
-      ...repayments.filter((item: any) => item.user?.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'repay_with_collateral', category: 'lending' }))
+      ...supplies.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_supply', category: 'lending' })),
+      ...withdrawals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_withdraw', category: 'lending' })),
+      ...collaterals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'collateral_supply', category: 'lending' })),
+      ...borrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow', category: 'lending' })),
+      ...crosschainBorrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow_crosschain', category: 'lending' })),
+      ...repayments.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'repay_with_collateral', category: 'lending' }))
     ];
 
     // Sort by timestamp (newest first)
@@ -130,12 +130,12 @@ activityRoutes.post("/activities/search", async (c) => {
     } = body;
 
     // Get all activities
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
 
     // Combine all activities with type labels
     let allActivities = [
@@ -231,12 +231,12 @@ activityRoutes.post("/activities/analytics", async (c) => {
     const { timeframe = '24h', groupBy = 'hour' } = body;
 
     // Get all activities
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
 
     // Calculate timeframe in seconds
     let timeframeSeconds = 24 * 3600; // default 24h

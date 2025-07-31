@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import { db } from "../../db";
-import { position as positionTable, collateralSupply, borrowDebt, liquiditySupply } from "../../../ponder.schema";
+import { client, position as positionTable, collateralSupply, borrowDebt, liquiditySupply } from "../../db";
 import { serializeBigInt } from '../index';
 
 export const positionRoutes = new Hono();
@@ -8,9 +7,7 @@ export const positionRoutes = new Hono();
 // GET /positions - Get all positions
 positionRoutes.get("/positions", async (c) => {
   try {
-    const positions = await db
-      .select()
-      .from(positionTable);
+    const positions = await client!`SELECT * FROM "position"`;
     return c.json({
       success: true,
       data: serializeBigInt(positions),
@@ -30,10 +27,7 @@ positionRoutes.get("/positions/user/:userAddress", async (c) => {
   try {
     const userAddress = c.req.param("userAddress");
     
-    const allPositions = await db
-      .select()
-      .from(positionTable);
-    
+    const allPositions = await client!`SELECT * FROM "position"`;
     const userPositions = allPositions.filter((p: any) => 
       p.borrower.toLowerCase() === userAddress.toLowerCase()
     );
@@ -57,10 +51,7 @@ positionRoutes.get("/positions/:positionId", async (c) => {
   try {
     const positionId = c.req.param("positionId");
     
-    const allPositions = await db
-      .select()
-      .from(positionTable);
-    
+    const allPositions = await client!`SELECT * FROM "position"`;
     const position = allPositions.find((p: any) => p.id === positionId);
     
     if (!position) {
@@ -89,8 +80,8 @@ positionRoutes.get("/positions/:positionId/history", async (c) => {
     const positionId = c.req.param("positionId");
     
     // Get all related transactions
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
     
     const positionCollaterals = collaterals.filter((c: any) => 
       c.id.includes(positionId) || c.borrower === positionId
@@ -133,7 +124,7 @@ positionRoutes.post("/positions/health-check", async (c) => {
     }
 
     const healthScores: any = {};
-    const allPositions = await db.select().from(positionTable);
+    const allPositions = await client!`SELECT * FROM "position"`;
 
     for (const positionId of positionIds) {
       const position = allPositions.find((p: any) => p.id === positionId);
@@ -194,7 +185,7 @@ positionRoutes.post("/positions/search", async (c) => {
       offset = 0 
     } = body;
 
-    let positions = await db.select().from(positionTable);
+    let positions = (await client!`SELECT * FROM "position"`) as any[];
 
     // Apply filters
     if (borrower) {
@@ -247,7 +238,7 @@ positionRoutes.post("/positions/search", async (c) => {
 // GET /liquidity-supplies - Get all liquidity supplies
 positionRoutes.get("/liquidity-supplies", async (c) => {
   try {
-    const supplies = await db.select().from(liquiditySupply);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
     return c.json({
       success: true,
       data: serializeBigInt(supplies),
@@ -268,7 +259,7 @@ positionRoutes.post("/positions/liquidation-candidates", async (c) => {
     const body = await c.req.json();
     const { healthThreshold = 20, limit = 100 } = body;
 
-    const positions = await db.select().from(positionTable);
+    const positions = await client!`SELECT * FROM "position"`;
     
     const candidates = positions
       .filter((position: any) => {
