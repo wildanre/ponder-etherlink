@@ -1,6 +1,5 @@
 import { Hono } from "hono";
-import { db } from "../../db";
-import { liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt, borrowDebtCrosschain, repayWithCollateral, position as positionTable } from "../../../ponder.schema";
+import { client, liquiditySupply, liquidityWithdraw, collateralSupply, borrowDebt, borrowDebtCrosschain, repayWithCollateral, position as positionTable } from "../../db";
 import { serializeBigInt } from '../index';
 
 export const userRoutes = new Hono();
@@ -11,13 +10,13 @@ userRoutes.get("/users/:userAddress", async (c) => {
     const userAddress = c.req.param("userAddress").toLowerCase();
 
     // Get user activities
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
-    const positions = await db.select().from(positionTable);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
+    const positions = await client!`SELECT * FROM "position"`;
 
     // Filter by user address
     const userSupplies = supplies.filter((item: any) => item.user?.toLowerCase() === userAddress);
@@ -82,7 +81,7 @@ userRoutes.get("/users/:userAddress/positions", async (c) => {
   try {
     const userAddress = c.req.param("userAddress").toLowerCase();
     
-    const allPositions = await db.select().from(positionTable);
+    const allPositions = await client!`SELECT * FROM "position"`;
     const userPositions = allPositions.filter((p: any) => p.user?.toLowerCase() === userAddress);
 
     return c.json({
@@ -110,13 +109,13 @@ userRoutes.post("/users/leaderboard", async (c) => {
     } = body;
 
     // Get all user activities
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const crosschainBorrows = await db.select().from(borrowDebtCrosschain);
-    const repayments = await db.select().from(repayWithCollateral);
-    const positions = await db.select().from(positionTable);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const crosschainBorrows = await client!`SELECT * FROM "borrowDebtCrosschain"`;
+    const repayments = await client!`SELECT * FROM "repayWithCollateral"`;
+    const positions = await client!`SELECT * FROM "position"`;
 
     // Calculate timeframe filter
     let timeframeSeconds = 30 * 24 * 3600; // default 30d
@@ -283,11 +282,11 @@ userRoutes.post("/users/search", async (c) => {
     } = body;
 
     // Get all activities to build user profiles
-    const supplies = await db.select().from(liquiditySupply);
-    const withdrawals = await db.select().from(liquidityWithdraw);
-    const collaterals = await db.select().from(collateralSupply);
-    const borrows = await db.select().from(borrowDebt);
-    const positions = await db.select().from(positionTable);
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
+    const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
+    const collaterals = await client!`SELECT * FROM "collateralSupply"`;
+    const borrows = await client!`SELECT * FROM "borrowDebt"`;
+    const positions = await client!`SELECT * FROM "position"`;
 
     // Group by user
     const userProfiles: { [key: string]: any } = {};
