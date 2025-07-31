@@ -2,7 +2,10 @@ import postgres from 'postgres';
 import * as schema from '../../ponder.schema';
 
 // Create the connection with fallback to hardcoded connection for testing
-const connectionString = process.env.DATABASE_URL || 'postgresql://postgres.bxvfvsgkpdwiakaquhgs:R6uE7VNV7qT4T9Sd@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true';
+const connectionString = process.env.DATABASE_URL;
+if (!connectionString) {
+  throw new Error('DATABASE_URL environment variable is not set. Please set it in your environment.');
+}
 
 
 let client: postgres.Sql<{}> | null = null;
