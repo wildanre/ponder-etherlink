@@ -75,10 +75,10 @@ poolRoutes.get("/pools/:poolAddress/activities", async (c) => {
 
     // Combine all activities with type labels
     const activities = [
-      ...poolSupplies.map((item: any) => ({ ...item, type: 'liquidity_supply' })),
-      ...poolWithdrawals.map((item: any) => ({ ...item, type: 'liquidity_withdraw' })),
-      ...poolCollaterals.map((item: any) => ({ ...item, type: 'collateral_supply' })),
-      ...poolBorrows.map((item: any) => ({ ...item, type: 'borrow' }))
+      ...poolSupplies.map((item: any) => ({ ...item, type: 'liquiditySupply' })),
+      ...poolWithdrawals.map((item: any) => ({ ...item, type: 'liquidityWithdraw' })),
+      ...poolCollaterals.map((item: any) => ({ ...item, type: 'collateralSupply' })),
+      ...poolBorrows.map((item: any) => ({ ...item, type: 'borrowDebt' }))
     ];
 
     // Sort by timestamp (newest first)

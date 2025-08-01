@@ -21,12 +21,12 @@ activityRoutes.get("/activities", async (c) => {
 
     // Combine all activities with type labels
     let allActivities = [
-      ...supplies.map((item: any) => ({ ...item, type: 'liquidity_supply', category: 'lending' })),
-      ...withdrawals.map((item: any) => ({ ...item, type: 'liquidity_withdraw', category: 'lending' })),
-      ...collaterals.map((item: any) => ({ ...item, type: 'collateral_supply', category: 'lending' })),
-      ...borrows.map((item: any) => ({ ...item, type: 'borrow', category: 'lending' })),
-      ...crosschainBorrows.map((item: any) => ({ ...item, type: 'borrow_crosschain', category: 'lending' })),
-      ...repayments.map((item: any) => ({ ...item, type: 'repay_with_collateral', category: 'lending' }))
+      ...supplies.map((item: any) => ({ ...item, type: 'liquiditySupply', category: 'lending' })),
+      ...withdrawals.map((item: any) => ({ ...item, type: 'liquidityWithdraw', category: 'lending' })),
+      ...collaterals.map((item: any) => ({ ...item, type: 'collateralSupply', category: 'lending' })),
+      ...borrows.map((item: any) => ({ ...item, type: 'borrowDebt', category: 'lending' })),
+      ...crosschainBorrows.map((item: any) => ({ ...item, type: 'borrowDebtCrosschain', category: 'lending' })),
+      ...repayments.map((item: any) => ({ ...item, type: 'repayWithCollateral', category: 'lending' }))
     ];
 
     // Filter by type if specified
@@ -78,12 +78,12 @@ activityRoutes.get("/activities/user/:userAddress", async (c) => {
 
     // Filter by user address and combine
     const userActivities = [
-      ...supplies.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_supply', category: 'lending' })),
-      ...withdrawals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidity_withdraw', category: 'lending' })),
-      ...collaterals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'collateral_supply', category: 'lending' })),
-      ...borrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow', category: 'lending' })),
-      ...crosschainBorrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrow_crosschain', category: 'lending' })),
-      ...repayments.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'repay_with_collateral', category: 'lending' }))
+      ...supplies.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquiditySupply', category: 'lending' })),
+      ...withdrawals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'liquidityWithdraw', category: 'lending' })),
+      ...collaterals.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'collateralSupply', category: 'lending' })),
+      ...borrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrowDebt', category: 'lending' })),
+      ...crosschainBorrows.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'borrowDebtCrosschain', category: 'lending' })),
+      ...repayments.filter((item: any) => typeof item.user === 'string' && item.user.toLowerCase() === userAddress).map((item: any) => ({ ...item, type: 'repayWithCollateral', category: 'lending' }))
     ];
 
     // Sort by timestamp (newest first)
@@ -139,12 +139,12 @@ activityRoutes.post("/activities/search", async (c) => {
 
     // Combine all activities with type labels
     let allActivities = [
-      ...supplies.map((item: any) => ({ ...item, type: 'liquidity_supply', category: 'lending' })),
-      ...withdrawals.map((item: any) => ({ ...item, type: 'liquidity_withdraw', category: 'lending' })),
-      ...collaterals.map((item: any) => ({ ...item, type: 'collateral_supply', category: 'lending' })),
-      ...borrows.map((item: any) => ({ ...item, type: 'borrow', category: 'lending' })),
-      ...crosschainBorrows.map((item: any) => ({ ...item, type: 'borrow_crosschain', category: 'lending' })),
-      ...repayments.map((item: any) => ({ ...item, type: 'repay_with_collateral', category: 'lending' }))
+      ...supplies.map((item: any) => ({ ...item, type: 'liquiditySupply', category: 'lending' })),
+      ...withdrawals.map((item: any) => ({ ...item, type: 'liquidityWithdraw', category: 'lending' })),
+      ...collaterals.map((item: any) => ({ ...item, type: 'collateralSupply', category: 'lending' })),
+      ...borrows.map((item: any) => ({ ...item, type: 'borrowDebt', category: 'lending' })),
+      ...crosschainBorrows.map((item: any) => ({ ...item, type: 'borrowDebtCrosschain', category: 'lending' })),
+      ...repayments.map((item: any) => ({ ...item, type: 'repayWithCollateral', category: 'lending' }))
     ];
 
     // Apply filters

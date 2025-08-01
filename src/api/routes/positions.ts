@@ -93,8 +93,8 @@ positionRoutes.get("/positions/:positionId/history", async (c) => {
 
     // Combine and sort by timestamp
     const history = [
-      ...positionCollaterals.map((item: any) => ({ ...item, type: 'collateral_supply' })),
-      ...positionBorrows.map((item: any) => ({ ...item, type: 'borrow' }))
+      ...positionCollaterals.map((item: any) => ({ ...item, type: 'collateralSupply' })),
+      ...positionBorrows.map((item: any) => ({ ...item, type: 'borrowDebt' }))
     ].sort((a: any, b: any) => Number(b.timestamp) - Number(a.timestamp));
 
     return c.json({
