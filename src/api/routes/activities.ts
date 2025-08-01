@@ -12,7 +12,7 @@ activityRoutes.get("/activities", async (c) => {
     const type = c.req.query("type"); // Filter by activity type
 
     // Get all activities
-    const supplies = await client!`SELECT * FROM liquiditySupply`;
+    const supplies = await client!`SELECT * FROM "liquiditySupply"`;
     const withdrawals = await client!`SELECT * FROM "liquidityWithdraw"`;
     const collaterals = await client!`SELECT * FROM "collateralSupply"`;
     const borrows = await client!`SELECT * FROM "borrowDebt"`;
