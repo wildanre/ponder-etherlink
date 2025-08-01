@@ -23,35 +23,35 @@ export default createConfig({
       chain: "etherlink",
       abi: isHealthyAbi as any,
       address: "0x7234365A362e33C93C8E9eeAd107266368C57f0d",
-      startBlock: 20786093,
+      startBlock: 20856651,
     },
 
     lendingPoolDeployer: {
       chain: "etherlink",
       abi: lendingPoolDeployerAbi as any,
-      address: "0xFaE7aC9665bd0F22A3b01C8C4F22B83581Ea4Ba9",
-      startBlock: 20786093,
+      address: "0x15b469dA6a57f8E67EE3fdA0CCd3699e159DeeE9",
+      startBlock: 20856651,
     },
 
     factory: {
       chain: "etherlink",
       abi: lendingPoolFactoryAbi as any,
-      address: "0x6361193Eb93685c0218AD2c698809c99CF6d7e38",
-      startBlock: 20786093,
+      address: "0x86CA4a34eB2C11F7406220E402cc689bb811C0CD",
+      startBlock: 20856651,
     },
 
     pool: {
       chain: "etherlink",
       abi: lendingPoolAbi as any,
-      address: "0xcE05d498fED4B72620b8D42954002bdEbe65Fb0e",
-      startBlock: 20786093,
+      address: "0xb4F8A55030a9e2b3B52d6267223915846eB2d3EC",
+      startBlock: 20856651,
     },
 
     position: {
       chain: "etherlink",
       abi: positionAbi as any,
-      address: "0x4aF0b3462411a18934318e7F17E905C77F078b5b",
-      startBlock: 20786093,
+      address: "0x8A1c8f849f0C109bAE01A3d57264d453D23d6329",
+      startBlock: 20856651,
     },
   },
 });

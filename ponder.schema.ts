@@ -82,7 +82,7 @@ export const borrowDebt = onchainTable("borrowDebt", (t) => ({
 }));
 
 export const borrowDebtCrosschain = onchainTable("borrowDebtCrosschain", (t) => ({
-  id: t.text().primaryKey(), // txHash-logIndex
+  id: t.text().primaryKey(), // txHash only
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
   amount: t.bigint().notNull(),

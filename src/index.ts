@@ -225,7 +225,7 @@ ponder.on("pool:SupplyCollateral" as any, async ({ event, context }: any) => {
 
 ponder.on("pool:BorrowDebtCrosschain" as any, async ({ event, context }: any) => {
   const borrowData = {
-    id: `${event.transaction.hash}-${event.log.logIndex}`,
+    id: event.transaction.hash,
     user: event.args.user,
     poolAddress: event.log.address,
     amount: event.args.amount,
