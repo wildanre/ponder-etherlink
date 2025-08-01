@@ -1,7 +1,7 @@
 import { onchainTable, index } from "ponder";
 
 // Lending Pool Factory Events
-export const lendingPool = onchainTable("lending_pool", (t) => ({
+export const lendingPool = onchainTable("lendingPool", (t) => ({
   id: t.text().primaryKey(), // Pool address
   collateralToken: t.text().notNull(),
   borrowToken: t.text().notNull(),
@@ -11,7 +11,7 @@ export const lendingPool = onchainTable("lending_pool", (t) => ({
   transactionHash: t.text().notNull(),
 }));
 
-export const basicTokenSender = onchainTable("basic_token_sender", (t) => ({
+export const basicTokenSender = onchainTable("basicTokenSender", (t) => ({
   id: t.text().primaryKey(), // chainId-sender
   chainId: t.bigint().notNull(),
   basicTokenSender: t.text().notNull(),
@@ -19,7 +19,7 @@ export const basicTokenSender = onchainTable("basic_token_sender", (t) => ({
   transactionHash: t.text().notNull(),
 }));
 
-export const priceDataStream = onchainTable("price_data_stream", (t) => ({
+export const priceDataStream = onchainTable("priceDataStream", (t) => ({
   id: t.text().primaryKey(), // token-dataStream
   token: t.text().notNull(),
   dataStream: t.text().notNull(),
@@ -38,7 +38,7 @@ export const position = onchainTable("position", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-export const liquiditySupply = onchainTable("liquidity_supply", (t) => ({
+export const liquiditySupply = onchainTable("liquiditySupply", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
@@ -49,7 +49,7 @@ export const liquiditySupply = onchainTable("liquidity_supply", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-export const liquidityWithdraw = onchainTable("liquidity_withdraw", (t) => ({
+export const liquidityWithdraw = onchainTable("liquidityWithdraw", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
@@ -60,7 +60,7 @@ export const liquidityWithdraw = onchainTable("liquidity_withdraw", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-export const collateralSupply = onchainTable("collateral_supply", (t) => ({
+export const collateralSupply = onchainTable("collateralSupply", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
@@ -70,7 +70,7 @@ export const collateralSupply = onchainTable("collateral_supply", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-export const borrowDebt = onchainTable("borrow_debt", (t) => ({
+export const borrowDebt = onchainTable("borrowDebt", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
@@ -81,7 +81,7 @@ export const borrowDebt = onchainTable("borrow_debt", (t) => ({
   timestamp: t.bigint().notNull(),
 }));
 
-export const borrowDebtCrosschain = onchainTable("borrow_debt_crosschain", (t) => ({
+export const borrowDebtCrosschain = onchainTable("borrowDebtCrosschain", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
@@ -94,7 +94,7 @@ export const borrowDebtCrosschain = onchainTable("borrow_debt_crosschain", (t) =
   timestamp: t.bigint().notNull(),
 }));
 
-export const repayWithCollateral = onchainTable("repay_with_collateral", (t) => ({
+export const repayWithCollateral = onchainTable("repayWithCollateral", (t) => ({
   id: t.text().primaryKey(), // txHash-logIndex
   user: t.text().notNull(),
   poolAddress: t.text().notNull(),
